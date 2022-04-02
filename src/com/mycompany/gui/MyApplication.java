@@ -1,3 +1,4 @@
+
 package com.mycompany.myapp;
 
 
@@ -14,6 +15,11 @@ import java.io.IOException;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.io.NetworkEvent;
 import com.mycompany.gui.AjoutPublicationForm;
+import com.mycompany.gui.ListPublicationForm;
+import com.mycompany.gui.StatistiquePieForm;
+
+
+
 
 
 
@@ -55,7 +61,13 @@ public class MyApplication {
             current.show();
             return;
         }
-          new AjoutPublicationForm(theme).show();
+         new AjoutPublicationForm(theme).show();
+         
+         
+         
+        
+         
+          
     }
 
     public void stop() {

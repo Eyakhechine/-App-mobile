@@ -8,31 +8,61 @@ package com.mycompany.gui;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.ScaleImageLabel;
 import com.codename1.components.SpanLabel;
+import com.codename1.io.ConnectionRequest;
+import com.codename1.io.JSONParser;
+import com.codename1.io.NetworkManager;
+import com.codename1.location.Location;
+import com.codename1.location.LocationManager;
+import com.codename1.maps.Coord;
+import com.codename1.maps.MapComponent;
+import com.codename1.maps.layers.LinesLayer;
+import com.codename1.maps.layers.PointLayer;
+import com.codename1.maps.layers.PointsLayer;
 import com.codename1.ui.Button;
 import com.codename1.ui.ButtonGroup;
+import com.codename1.ui.Command;
 import com.codename1.ui.Component;
 import static com.codename1.ui.Component.BOTTOM;
 import static com.codename1.ui.Component.CENTER;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Graphics;
 import com.codename1.ui.Image;
 import com.codename1.ui.Label;
 import com.codename1.ui.RadioButton;
+import com.codename1.ui.Stroke;
 import com.codename1.ui.Tabs;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.Transform;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
+import com.codename1.ui.geom.GeneralPath;
+import com.codename1.ui.geom.Shape;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.FlowLayout;
 import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.layouts.LayeredLayout;
 import com.codename1.ui.plaf.Style;
+import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.util.Resources;
 import com.mycompany.entities.Publication;
 import com.mycompany.services.ServicePublication;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
 
 /**
  *
@@ -40,9 +70,16 @@ import com.mycompany.services.ServicePublication;
  */
 public class AjoutPublicationForm extends BaseForm {
     Form current;
+           private Form main;
+    private Coord lastLocation;
     public AjoutPublicationForm(Resources res ){
+        
+    
     
     super ("Newsfeed",BoxLayout.y());
+    
+ 
+    
     Toolbar tb = new Toolbar(true);
     current = this;
     setToolbar(tb);
@@ -104,49 +141,50 @@ public class AjoutPublicationForm extends BaseForm {
         ButtonGroup barGroup = new ButtonGroup();
         RadioButton Publications = RadioButton.createToggle("Publications", barGroup);
         Publications.setUIID("SelectBar");
-        RadioButton pub = RadioButton.createToggle("autres", barGroup);
+        RadioButton pub = RadioButton.createToggle("Statistiques", barGroup);
         pub.setUIID("SelectBar");
-        RadioButton ajout = RadioButton.createToggle("Ajouter publication", barGroup);
+        RadioButton ajout = RadioButton.createToggle("Ajouter", barGroup);
        ajout.setUIID("SelectBar");
-    
-        Label arrow = new Label(res.getImage("news-tab-down-arrow.png"), "Container");
+
+       
         
-        Publications.addActionListener((e) -> {
-        InfiniteProgress ip = new InfiniteProgress();
-        final Dialog ipD1g= ip.showInfiniteBlocking();
+           // click   3 boutons  ajout stat publications 
+        ajout.addActionListener((e) -> {
+      
+        new AjoutPublicationForm(res).show();
+     
         
-        refreshTheme();
         
     });
         
+         pub.addActionListener((e) -> {
+   new StatistiquePieForm(res).show();
         
+    });
+         
+            Publications.addActionListener((e) -> {
+   new ListPublicationForm(res).show();
         
+    });
         
         add(LayeredLayout.encloseIn(
-                GridLayout.encloseIn(3,Publications, pub, ajout),
-                FlowLayout.encloseBottom(arrow)
+                GridLayout.encloseIn(3,Publications, pub, ajout)
+             
         ));
         
         ajout.setSelected(true);
-        arrow.setVisible(false);
-        addShowListener(e -> {
-            arrow.setVisible(true);
-            updateArrowPosition(ajout, arrow);
-        });
-        bindButtonSelection(Publications, arrow);
-        bindButtonSelection(pub, arrow);
-        bindButtonSelection(ajout, arrow);
+      
+      
+     
        
         
         // special case for rotation
-        addOrientationListener(e -> {
-            updateArrowPosition(barGroup.getRadioButton(barGroup.getSelectedIndex()), arrow);
-        });
+      
     
     
     
     
-    //
+    // FORMULAIRE AJOUT
     
     
     TextField nom = new TextField("","saisir le nom  !");
@@ -154,7 +192,7 @@ public class AjoutPublicationForm extends BaseForm {
     addStringValue("nom",nom);
     
      TextField description = new TextField("","saisir la description  !");
-    nom.setUIID("TextFieldBlack");
+    description.setUIID("TextFieldBlack");
     addStringValue("description",description);
     
     
@@ -190,13 +228,10 @@ public class AjoutPublicationForm extends BaseForm {
             
             new ListPublicationForm(res).show();
             
+           
             refreshTheme();
         }
-            
-            
-            
-            
-    
+
     
     }catch( Exception ex) {
     
@@ -205,12 +240,8 @@ public class AjoutPublicationForm extends BaseForm {
     
     
     });
-    
-    
-    
-    
+  
     }
-
     private void addStringValue(String s, Component v) {
        add(BorderLayout.west(new Label(s,"PaddedLabel"))
        
@@ -258,28 +289,16 @@ public class AjoutPublicationForm extends BaseForm {
                   swipe.addTab("",res.getImage("logo.png"),page1 )    ;  
     }
     
-    public void bindButtonSelection(Button btn,Label l){
-    
-    
-    btn.addActionListener(e ->  {
-    
-        if(btn.isSelected()) {
-        
-        updateArrowPosition(btn,l);
-        
-        }
-    
-    
-    });
-    }
+ 
 
-    private void updateArrowPosition(Button btn, Label l) {
-        l.getUnselectedStyle().setMargin(LEFT,btn.getX() + btn.getWidth() / 2 - l.getWidth() / 2  );
-        l.getParent().repaint();
-        
-        
-        
-    }
+  
+    
+   
+
     
     
+    
+    
+    
+  
 }

@@ -30,7 +30,7 @@ public class ModifierPublicationForm extends BaseForm {
     current = this;
     setToolbar(tb);
     getTitleArea().setUIID("Container");
-    setTitle("ajout publications");
+    setTitle("modifier publications");
     getContentPane().setScrollVisible(false);
     
     super.addSideMenu(res);

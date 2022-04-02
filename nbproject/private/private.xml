@@ -7,12 +7,14 @@
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/MyApplication.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/ListPublicationForm.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/WalkthruForm.java</file>
+            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/SignUpForm.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/AjoutPublicationForm.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/utils/Statics.java</file>
+            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/ModifierPublicationForm.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/services/ServicePublication.java</file>
             <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/entities/Publication.java</file>
-            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/ModifierPublicationForm.java</file>
-            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/NewsfeedForm.java</file>
+            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/StatistiquePieForm.java</file>
+            <file>file:/C:/Users/EYA/Documents/NetBeansProjects/mobile/src/com/mycompany/gui/MapForm.java</file>
         </group>
     </open-files>
 </project-private>
